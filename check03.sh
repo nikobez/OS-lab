@@ -5,10 +5,12 @@ if [ -z $1 ]; then
   exit
 fi
 
-userName="boss"
+userName="teacher"
+pswd="teacher"
+
 toDay=$(date +%d-%m-%y)
-r_hostName=$(ssh $userName@$1 hostname)
-ipAddr=$(ssh $userName@$1 ip -4 -br address show enp0s3)
+r_hostName=$(sshpass -p $pswd ssh -o StrictHostKeyChecking=no $userName@$1 hostname)
+ipAddr=$(sshpass -p $pswd ssh $userName@$1 ip -4 -br address show enp0s3)
 r_group=${r_hostName:2:6}
 r_user1=${r_hostName:9:2}
 r_user2=${r_hostName:12:2}
@@ -22,11 +24,11 @@ echo -e "Interface eth: " $ipAddr
 echo -e "\033[0m"
 
 arg1=$(echo $r_hostName | awk '/[0-9][0-9][a-z][a-z][0-9][0-9]-[0-9][0-9]-[0-9][0-9]/{print $0}')
-arg2=$(ssh $userName@$1 cat /tmp/dmesg.txt 2>/dev/null | grep "enp0s3" -c)
-arg3=$(ssh $userName@$1 cat /tmp/dmesg.txt 2>/dev/null | grep "fb0" -c)
-arg4=$(ssh $userName@$1 cat /tmp/myip.sh 2>/dev/null | grep "ip")
-arg5=$(ssh $userName@$1 cat /etc/sysemd/system/myip.service 2>/dev/null | grep "/tmp/myip.sh")
-arg6=$(ssh $userName@$1 systemctl status myip | grep "success" -c)
+arg2=$(sshpass -p $pswd ssh $userName@$1 cat /tmp/dmesg.txt 2>/dev/null | grep "enp0s3" -c)
+arg3=$(sshpass -p $pswd ssh $userName@$1 cat /tmp/dmesg.txt 2>/dev/null | grep "fb0" -c)
+arg4=$(sshpass -p $pswd ssh $userName@$1 cat /tmp/myip.sh 2>/dev/null | grep "ip")
+arg5=$(sshpass -p $pswd ssh $userName@$1 cat /etc/sysemd/system/myip.service 2>/dev/null | grep "/tmp/myip.sh")
+arg6=$(sshpass -p $pswd ssh $userName@$1 systemctl status myip | grep "success" -c)
 
 let score=0
 

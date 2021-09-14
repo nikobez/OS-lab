@@ -5,10 +5,12 @@ if [ -z $1 ]; then
   exit
 fi
 
-userName="boss"
+userName="teacher"
+pswd="teacher"
+
 toDay=$(date +%d-%m-%y)
-r_hostName=$(ssh $userName@$1 hostname)
-ipAddr=$(ssh $userName@$1 ip -4 -br address show enp0s3)
+r_hostName=$(sshpass -p $pswd ssh -o StrictHostkeyChecking=no $userName@$1 hostname)
+ipAddr=$(sshpass -p $pswd ssh $userName@$1 ip -4 -br address show enp0s3)
 r_group=${r_hostName:2:6}
 r_user1=${r_hostName:9:2}
 r_user2=${r_hostName:12:2}
@@ -24,13 +26,13 @@ echo -e "Group for check: " $r_group
 echo -e "Interface eth: " $ipAddr
 echo -e "\033[0m"
 
-arg1=$(ssh $userName@$1 cat /etc/passwd | grep user$r_user1)
-arg2=$(ssh $userName@$1 cat /etc/passwd | grep user$r_user2)
+arg1=$(sshpass -p $pswd ssh $userName@$1 cat /etc/passwd | grep user$r_user1)
+arg2=$(sshpass -p $pswd ssh $userName@$1 cat /etc/passwd | grep user$r_user2)
 arg3=$(echo $r_hostName | awk '/[0-9][0-9][a-z][a-z][0-9][0-9]-[0-9][0-9]-[0-9][0-9]/{print $0}')
-arg4=$(ssh $userName@$1 cat /etc/group | grep $r_group)
-arg5=$(ssh $userName@$1 ls -l /tmp/file1.txt 2>/dev/null | awk '{print $1}' | grep "rwxr--r--")
+arg4=$(sshpass -p $pswd ssh $userName@$1 cat /etc/group | grep $r_group)
+arg5=$(sshpass -p $pswd ssh $userName@$1 ls -l /tmp/file1.txt 2>/dev/null | awk '{print $1}' | grep "rwxr--r--")
 
-echo $(ssh $userName@$1 ls -l /tmp/file1.txt 2>/dev/null | awk '{print $1}')
+echo $(sshpass -p $pswd ssh $userName@$1 ls -l /tmp/file1.txt 2>/dev/null | awk '{print $1}')
 
 let score=0
 
