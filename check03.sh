@@ -24,52 +24,59 @@ echo -e "Interface eth: " $ipAddr
 echo -e "\033[0m"
 
 arg1=$(echo $r_hostName | awk '/[0-9][0-9][a-z][a-z][0-9][0-9]-[0-9][0-9]-[0-9][0-9]/{print $0}')
-arg2=$(sshpass -p $pswd ssh $userName@$1 cat /tmp/dmesg.txt 2>/dev/null | grep "enp0s3" -c)
+arg2=$(sshpass -p $pswd ssh $userName@$1 cat /tmp/dmesg.txt 2>/dev/null | grep "enp0s" -c)
 arg3=$(sshpass -p $pswd ssh $userName@$1 cat /tmp/dmesg.txt 2>/dev/null | grep "fb0" -c)
-arg4=$(sshpass -p $pswd ssh $userName@$1 cat /tmp/myip.sh 2>/dev/null | grep "ip")
-arg5=$(sshpass -p $pswd ssh $userName@$1 cat /etc/sysemd/system/myip.service 2>/dev/null | grep "/tmp/myip.sh")
+arg4=$(sshpass -p $pswd ssh $userName@$1 cat /opt/myip.sh 2>/dev/null | grep "ip" -c)
+arg5=$(sshpass -p $pswd ssh $userName@$1 cat /etc/sysemd/system/myip.service 2>/dev/null | grep "/opt/myip.sh")
 arg6=$(sshpass -p $pswd ssh $userName@$1 systemctl status myip | grep "success" -c)
 
 let score=0
 
-if [ ! -z $arg3 ]; then
-   echo -e "\033[32mHostname check 	- success \033[0m"
-   let score++
-else
-   echo -e "\033[31mHostname check 	- failed \033[0m"
-fi
-
 if [ ! -z $arg1 ]; then
-   echo -e "\033[32mCheck user1	- success \033[0m"
+   echo -e "\033[32mHostname check 			- success \033[0m"
    let score++
 else
-   echo -e "\033[31mCheck user1	- failed \033[0m"
+   echo -e "\033[31mHostname check 			- failed \033[0m"
 fi
 
-if [ ! -z $arg2 ]; then
-   echo -e "\033[32mCheck user2	- success \033[0m"
+if [[ $arg2 > 0 ]]; then
+   echo -e "\033[32mCheck enp0s3			- success \033[0m"
    let score++
 else
-   echo -e "\033[31mCheck user2	- failed \033[0m"
+   echo -e "\033[31mCheck enp0s3			- failed \033[0m"
 fi
 
-if [ ! -z $arg4 ]; then
-   echo -e "\033[32mCheck group	- success \033[0m"
+if [[ $arg3 > 0 ]]; then
+   echo -e "\033[32mCheck fb0			- success \033[0m"
    let score++
 else
-   echo -e "\033[31mCheck group	- failed \033[0m"
+   echo -e "\033[31mCheck fb0			- failed \033[0m"
+fi
+
+if [[ $arg4 > 0 ]]; then
+   echo -e "\033[32mCheck script myip.sh		- success \033[0m"
+   let score++
+else
+   echo -e "\033[31mCheck script myip.sh		- failed \033[0m"
 fi
 
 if [ ! -z $arg5 ]; then
-   echo -e "\033[32mCheck file	- success \033[0m"
+   echo -e "\033[32mCheck myip.service		- success \033[0m"
    let score++
 else
-   echo -e "\033[31mCheck file	- failed \033[0m"
+   echo -e "\033[31mCheck myip.service		- failed \033[0m"
+fi
+
+if [[ $arg6 > 0 ]]; then
+   echo -e "\033[32mCheck myip.service is started	- success \033[0m"
+   let score++
+else
+   echo -e "\033[31mCheck myip.service is started	- failed \033[0m"
 fi
 
 tput sgr0
 
-if [[ $score == 5 ]]; then
+if [[ $score == 6 ]]; then
    echo $toDay',lab02,'$r_group','$r_user1','$r_user2','$ipAddr','ok >> ./log/$r_group
 else
    echo $toDay',lab02,'$r_group','$r_user1','$r_user2','$ipAddr','failed >> ./log/$r_group

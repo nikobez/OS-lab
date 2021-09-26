@@ -29,7 +29,7 @@ echo -e "\033[0m"
 arg1=$(sshpass -p $pswd ssh $userName@$1 cat /etc/passwd | grep user$r_user1)
 arg2=$(sshpass -p $pswd ssh $userName@$1 cat /etc/passwd | grep user$r_user2)
 arg3=$(echo $r_hostName | awk '/[0-9][0-9][a-z][a-z][0-9][0-9]-[0-9][0-9]-[0-9][0-9]/{print $0}')
-arg4=$(sshpass -p $pswd ssh $userName@$1 cat /etc/group | grep $r_group)
+arg4=$(sshpass -p $pswd ssh $userName@$1 grep -w $r_group':x' /etc/group)
 arg5=$(sshpass -p $pswd ssh $userName@$1 ls -l /tmp/file1.txt 2>/dev/null | awk '{print $1}' | grep "rwxr--r--")
 
 echo $(sshpass -p $pswd ssh $userName@$1 ls -l /tmp/file1.txt 2>/dev/null | awk '{print $1}')
