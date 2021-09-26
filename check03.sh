@@ -77,7 +77,7 @@ fi
 tput sgr0
 
 if [[ $score == 6 ]]; then
-   echo $toDay',lab02,'$r_group','$r_user1','$r_user2','$ipAddr','ok >> ./log/$r_group
+   echo $toDay',lab03,'$r_group','$r_user1','$r_user2','$ipAddr','ok >> ./log/$r_group
 else
-   echo $toDay',lab02,'$r_group','$r_user1','$r_user2','$ipAddr','failed >> ./log/$r_group
+   echo $toDay',lab03,'$r_group','$r_user1','$r_user2','$ipAddr','failed >> ./log/$r_group
 fi
