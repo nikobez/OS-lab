@@ -1,3 +1,2 @@
 # OS-lab
-Autochekers scripts for l
-aboratory work on the course "operating systems"
+Autocheker scripts for laboratory work on the course "operating systems"
