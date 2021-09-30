@@ -25,10 +25,10 @@ echo -e "\033[0m"
 
 arg1=$(echo $r_hostName | awk '/[0-9][0-9][a-z][a-z][0-9][0-9]-[0-9][0-9]-[0-9][0-9]/{print $0}')
 arg2=$(sshpass -p $pswd ssh $userName@$1 cat /tmp/dmesg.txt 2>/dev/null | grep "enp0s" -c)
-arg3=$(sshpass -p $pswd ssh $userName@$1 cat /tmp/dmesg.txt 2>/dev/null | grep "fb0" -c)
+arg3=$(sshpass -p $pswd ssh $userName@$1 cat /tmp/dmesg.txt 2>/dev/null | grep "vgaarb" -c)
 arg4=$(sshpass -p $pswd ssh $userName@$1 cat /opt/myip.sh 2>/dev/null | grep "ip" -c)
-arg5=$(sshpass -p $pswd ssh $userName@$1 cat /etc/sysemd/system/myip.service 2>/dev/null | grep "/opt/myip.sh")
-arg6=$(sshpass -p $pswd ssh $userName@$1 systemctl status myip | grep "success" -c)
+arg5=$(sshpass -p $pswd ssh $userName@$1 cat /etc/systemd/system/myip.service 2>/dev/null | grep "/opt/myip.sh" -c)
+arg6=$(sshpass -p $pswd ssh $userName@$1 systemctl status myip | grep "active" -c)
 
 let score=0
 
@@ -60,7 +60,7 @@ else
    echo -e "\033[31mCheck script myip.sh		- failed \033[0m"
 fi
 
-if [ ! -z $arg5 ]; then
+if [[ $arg5 > 0 ]]; then
    echo -e "\033[32mCheck myip.service		- success \033[0m"
    let score++
 else
